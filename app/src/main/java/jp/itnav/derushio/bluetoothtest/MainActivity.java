@@ -1,8 +1,5 @@
 package jp.itnav.derushio.bluetoothtest;
 
-import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -12,10 +9,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Set;
+
+import jp.itnav.derushio.bluetoothmanager.BluetoothManagedActivity;
 
 
-public class MainActivity extends Activity {
+public class MainActivity extends BluetoothManagedActivity {
 
 	private LinearLayout btDevicesHolder;
 	private ArrayList<TextView> paredDevices;
@@ -28,19 +26,16 @@ public class MainActivity extends Activity {
 		btDevicesHolder = (LinearLayout) findViewById(R.id.btDevicesHolder);
 		paredDevices = new ArrayList<TextView>();
 
-		BluetoothAdapter bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
-		Set<BluetoothDevice> boundedDevices = bluetoothAdapter.getBondedDevices();
-		if (boundedDevices.size() > 0) {
-			for (BluetoothDevice bluetoothDevice : boundedDevices) {
+		ArrayList<String> paredDeviceNames = getParedDeviceNames();
+		if (paredDeviceNames.size() > 0) {
+			for (String paredDeviceName : paredDeviceNames) {
 				final TextView textView = new TextView(this);
-				textView.setText(bluetoothDevice.getName() + "\n" + bluetoothDevice.getAddress());
-				textView.setTag(bluetoothDevice.getAddress());
+				textView.setText(paredDeviceName);
 				textView.setOnClickListener(new View.OnClickListener() {
 					@Override
 					public void onClick(View view) {
 						Intent intent = new Intent(MainActivity.this, SendOnlyActivity.class);
-						intent.putExtra(SendOnlyActivity.BLUETOOTH_MAC_ADDRESS, textView.getTag().toString());
+						intent.putExtra(SendOnlyActivity.BLUETOOTH_DEVICE_NAME, textView.getText().toString());
 						startActivity(intent);
 					}
 				});

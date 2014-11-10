@@ -1,6 +1,5 @@
 package jp.itnav.derushio.bluetoothtest;
 
-import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
@@ -9,50 +8,36 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
-import java.util.Set;
+import jp.itnav.derushio.bluetoothmanager.BluetoothManagedActivity;
 
 
-public class SendOnlyActivity extends Activity {
+public class SendOnlyActivity extends BluetoothManagedActivity {
 
-	public static final String BLUETOOTH_MAC_ADDRESS = "btAddress";
+	public static final String BLUETOOTH_DEVICE_NAME = "deviceName";
 
-	private static String btAddress;
+	private static String deviceName;
 	private static BluetoothDevice bluetoothDevice;
 	private static BluetoothAdapter bluetoothAdapter;
-
-	private BlueToothClientThreadManager blueToothClientThreadManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_send_only);
 
-		btAddress = getIntent().getStringExtra(BLUETOOTH_MAC_ADDRESS);
-		Log.d("btAddress", btAddress);
-
-		bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-		Set<BluetoothDevice> paredDevices = bluetoothAdapter.getBondedDevices();
-
-		if (paredDevices.size() > 0) {
-			for (BluetoothDevice paredDevice : paredDevices) {
-				if (paredDevice.getAddress().equals(btAddress)) {
-					bluetoothDevice = paredDevice;
-					break;
-				}
-			}
-		}
+		deviceName = getIntent().getStringExtra(BLUETOOTH_DEVICE_NAME);
+		Log.d("btAddress", deviceName);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		blueToothClientThreadManager = new BlueToothClientThreadManager(this, bluetoothAdapter, bluetoothDevice);
+		connectDevice(deviceName);
 	}
 
 	@Override
 	protected void onStop() {
 		super.onStop();
-		blueToothClientThreadManager.disconnect();
+		disConnectDevices();
 	}
 
 	@Override
@@ -78,28 +63,23 @@ public class SendOnlyActivity extends Activity {
 	}
 
 	public void mouseMoveUp(View v) {
-		blueToothClientThreadManager.setMessage("x0y-500s0m0e");
-		blueToothClientThreadManager.run();
+		sendMessage("x0y-500s0m0e");
 	}
 
 	public void mouseMoveLeft(View v) {
-		blueToothClientThreadManager.setMessage("x-500y0s0m0e");
-		blueToothClientThreadManager.run();
+		sendMessage("x-500y0s0m0e");
 	}
 
 	public void mouseMoveRight(View v) {
-		blueToothClientThreadManager.setMessage("x500y0s0m0e");
-		blueToothClientThreadManager.run();
+		sendMessage("x500y0s0m0e");
 	}
 
 	public void mouseMoveDown(View v) {
-		blueToothClientThreadManager.setMessage("x0y500s0m0e");
-		blueToothClientThreadManager.run();
+		sendMessage("x0y500s0m0e");
 	}
 
 	public void mouseActionClick(View v) {
-		blueToothClientThreadManager.setMessage("x0y0s0m1e");
-		blueToothClientThreadManager.run();
+		sendMessage("x0y0s0m1e");
 	}
 
 }
