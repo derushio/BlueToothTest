@@ -1,7 +1,5 @@
 package jp.itnav.derushio.bluetoothtest;
 
-import android.bluetooth.BluetoothAdapter;
-import android.bluetooth.BluetoothDevice;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -15,9 +13,7 @@ public class SendOnlyActivity extends BluetoothManagedActivity {
 
 	public static final String BLUETOOTH_DEVICE_NAME = "deviceName";
 
-	private static String deviceName;
-	private static BluetoothDevice bluetoothDevice;
-	private static BluetoothAdapter bluetoothAdapter;
+	private String deviceName;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
