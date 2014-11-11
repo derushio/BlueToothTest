@@ -13,27 +13,13 @@ public class SendOnlyActivity extends BluetoothManagedActivity {
 
 	public static final String BLUETOOTH_DEVICE_NAME = "deviceName";
 
-	private String deviceName;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_send_only);
 
-		deviceName = getIntent().getStringExtra(BLUETOOTH_DEVICE_NAME);
-		Log.d("btAddress", deviceName);
-	}
-
-	@Override
-	protected void onResume() {
-		super.onResume();
-		connectDevice(deviceName);
-	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-		disConnectDevices();
+		setTargetDeviceName(getIntent().getStringExtra(BLUETOOTH_DEVICE_NAME));
+		Log.d("btAddress", getTargetDeviceName());
 	}
 
 	@Override
