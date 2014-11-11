@@ -63,23 +63,23 @@ public class SendOnlyActivity extends BluetoothManagedActivity {
 	}
 
 	public void mouseMoveUp(View v) {
-		sendMessage("x0y-500s0m0e");
+		writeMessage("x0y-500s0m0e");
 	}
 
 	public void mouseMoveLeft(View v) {
-		sendMessage("x-500y0s0m0e");
+		writeMessage("x-500y0s0m0e");
 	}
 
 	public void mouseMoveRight(View v) {
-		sendMessage("x500y0s0m0e");
+		writeMessage("x500y0s0m0e");
 	}
 
 	public void mouseMoveDown(View v) {
-		sendMessage("x0y500s0m0e");
+		writeMessage("x0y500s0m0e");
 	}
 
 	public void mouseActionClick(View v) {
-		sendMessage("x0y0s0m1e");
+		writeMessage("x0y0s0m1e");
 	}
 
 }
