@@ -1,10 +1,13 @@
 package jp.itnav.derushio.bluetoothtest;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import jp.itnav.derushio.bluetoothmanager.BluetoothManagedActivity;
 
@@ -20,6 +23,13 @@ public class SendOnlyActivity extends BluetoothManagedActivity {
 
 		setTargetDeviceName(getIntent().getStringExtra(BLUETOOTH_DEVICE_NAME));
 		Log.d("btAddress", getTargetDeviceName());
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		TimerHandler timerHandler = new TimerHandler();
+		timerHandler.sleep(3000);
 	}
 
 	@Override
@@ -64,4 +74,29 @@ public class SendOnlyActivity extends BluetoothManagedActivity {
 		writeMessage("x0y0s0m1e");
 	}
 
+	@Override
+	protected void onReadMessageFinished(String s) {
+		Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+	}
+
+	public class TimerHandler extends Handler {
+		private long delayMillis;
+
+		@Override
+		public void handleMessage(Message msg) {
+			super.handleMessage(msg);
+
+			readMessageStart();
+
+			if (this != null) {
+				sleep(delayMillis);
+			}
+		}
+
+		public void sleep(long delayMillis) {
+			this.delayMillis = delayMillis;
+			removeMessages(0);
+			sendMessageDelayed(obtainMessage(0), delayMillis);
+		}
+	}
 }

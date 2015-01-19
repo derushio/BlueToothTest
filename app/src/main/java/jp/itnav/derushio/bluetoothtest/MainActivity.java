@@ -45,6 +45,11 @@ public class MainActivity extends BluetoothManagedActivity {
 		}
 	}
 
+	@Override
+	protected void onReadMessageFinished(String s) {
+
+	}
+
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
