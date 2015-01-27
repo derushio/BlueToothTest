@@ -9,12 +9,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import jp.itnav.derushio.bluetoothmanager.BluetoothManagedActivity;
 
 
 public class SendOnlyActivity extends BluetoothManagedActivity {
 
 	public static final String BLUETOOTH_DEVICE_NAME = "deviceName";
+	private TimerHandler timerHandler;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -23,13 +26,25 @@ public class SendOnlyActivity extends BluetoothManagedActivity {
 
 		setTargetDeviceName(getIntent().getStringExtra(BLUETOOTH_DEVICE_NAME));
 		Log.d("btAddress", getTargetDeviceName());
+
+
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		TimerHandler timerHandler = new TimerHandler();
+
+		sensorTimerHandler = new SensorTimerHandler();
+		sensorTimerHandler.sleep(1000);
+		timerHandler = new TimerHandler();
 		timerHandler.sleep(3000);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		sensorTimerHandler = null;
+		timerHandler = null;
 	}
 
 	@Override
@@ -74,29 +89,32 @@ public class SendOnlyActivity extends BluetoothManagedActivity {
 		writeMessage("x0y0s0m1e");
 	}
 
-	@Override
-	protected void onReadMessageFinished(String s) {
-		Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
-	}
-
-	public class TimerHandler extends Handler {
-		private long delayMillis;
+	private class TimerHandler extends Handler {
+		private long delayMilliSec;
 
 		@Override
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 
-			readMessageStart();
-
-			if (this != null) {
-				sleep(delayMillis);
+			if (timerHandler != null) {
+				sleep(delayMilliSec);
 			}
+
+			ArrayList<String> messages = readMessage();
+
+			String str = "";
+			for (String message : messages) {
+				str += message + "\n";
+			}
+
+			Toast.makeText(SendOnlyActivity.this, str, Toast.LENGTH_SHORT).show();
+
 		}
 
-		public void sleep(long delayMillis) {
-			this.delayMillis = delayMillis;
+		public void sleep(long delayMilliSec) {
+			this.delayMilliSec = delayMilliSec;
 			removeMessages(0);
-			sendMessageDelayed(obtainMessage(0), delayMillis);
+			sendMessageDelayed(obtainMessage(0), delayMilliSec);
 		}
 	}
 }
